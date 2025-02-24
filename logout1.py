@@ -8,7 +8,7 @@ gecko_path = "C:\\Users\\Al Habib Trade\\Desktop\\Selenium\\geckodriver-v0.35.0-
 service = Service(gecko_path)
 driver = webdriver.Firefox(service=service)
 
-try: 
+try:
     driver.get("https://testc.fwt-logi.com/AdminArea/index.php")
     wait = WebDriverWait(driver, 10)
     username_field = wait.until(expected_conditions.presence_of_element_located((By.XPATH, "//input[@placeholder='Enter user name']")))
@@ -20,5 +20,13 @@ try:
     wait.until(expected_conditions.url_changes("https://testc.fwt-logi.com/AdminArea/index.php"))
     print("Login successful! Current URL:", driver.current_url)
 
-except Exception as e:
-    print("Error occurred:", e) 
+    welcome_button = wait.until(expected_conditions.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Welcome Ali Zahid' )]")))
+    welcome_button.click()
+    logout_button = wait.until(expected_conditions.element_to_be_clickable((By.XPATH, "//*[contains(text(), 'Logout')]")))
+    logout_button.click()
+    wait.until(expected_conditions.url_contains("index.php"))
+    print("Logout successful! Redirected to Login Page.")
+
+except Exception as e:      
+    print("Error occurred:", e)
+ 
