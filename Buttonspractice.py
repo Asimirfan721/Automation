@@ -26,25 +26,32 @@ try:
 
     # 4️⃣ Wait for Successful Login
     wait.until(EC.url_to_be("https://testc.fwt-logi.com/AdminArea/dashboard.php"))
-    print("✅ Login successful! Current URL:", driver.current_url)
+    print("✅ Login successful!")
 
-    # 5️⃣ Click "Information Management" Button
-    button_info_mgt = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'information management')]")))
-    button_info_mgt.click()
+    # 5️⃣ Check if "Information Management" button is inside an iframe
+    try:
+        iframe = driver.find_element(By.TAG_NAME, "iframe")
+        driver.switch_to.frame(iframe)
+        print("🖼 Switched to iframe")
+    except:
+        print("⚠ No iframe detected, proceeding normally.")
 
-    # 6️⃣ Wait for Navigation
+    # 6️⃣ Click "Information Management" Button
+    try:
+        button_info_mgt = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Information Management')]")))
+        button_info_mgt.click()
+    except:
+        print("⚠ Normal click failed, trying JavaScript click")
+        button_info_mgt = wait.until(EC.presence_of_element_located((By.XPATH, "//button[contains(text(),'Information Management')]")))
+        driver.execute_script("arguments[0].click();", button_info_mgt)
+
+    # 7️⃣ Switch back to default content
+    driver.switch_to.default_content()
+
+    # 8️⃣ Wait for Navigation to Information Management Page
     wait.until(EC.url_to_be("https://testc2.fwt-logi.com/AdminArea/subpages/info_mgt.php"))
     print("✅ Navigated to Information Management Page:", driver.current_url)
 
-    # 7️⃣ Click "Add" Button
-    button_add = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[contains(text(),'Add')]")))
-    button_add.click()
-
-    # 8️⃣ Wait for Navigation to Travel Request Page
-    wait.until(EC.url_to_be("https://testc2.fwt-logi.com/AdminArea/subpages/travel-request.php"))
-    print("✅ Navigated to Travel Request Page:", driver.current_url)
-
 except Exception as e:
     print("❌ Error occurred:", e)
-
  
