@@ -24,25 +24,25 @@ try:
     wait.until(EC.url_to_be("https://www.qualitextrading.com/country/australia"))
     print("✅ Navigated to Australia page")
 
-    # 4️⃣ Scroll Down Slowly Until Element is Found
-    for _ in range(10):  # Scroll down multiple times
-        driver.execute_script("window.scrollBy(0, 120);")  # Scroll in small steps
-        time.sleep(1)  # Wait for elements to load
+    # 4️⃣ Scroll Down to Ensure Lazy Loaded Elements Are Visible
+    driver.execute_script("window.scrollTo(0, document.body.scrollHeight / 2);")  
+    time.sleep(2)  # Wait for elements to load
 
-        try:
-            part_button = driver.find_element(By.XPATH, "//div[contains(text(), '21-0130-667')]")
-            print("✅ Found '21-0130-667' button")
-            break  # Stop scrolling if found
-        except:
-            continue  # Keep scrolling if not found
+    # 5️⃣ Wait for the "Show More" Buttons to Appear and Click Them
+    try:
+        show_more_buttons = wait.until(EC.presence_of_all_elements_located((By.XPATH, "//button[contains(text(), 'Show More')]")))
+        
+        for button in show_more_buttons:
+            driver.execute_script("arguments[0].scrollIntoView(true);", button)
+            time.sleep(1)
+            driver.execute_script("arguments[0].click();", button)
+            print("✅ Clicked a 'Show More' button")
 
-    # 5️⃣ Click Using JavaScript (Ensures Click Works)
-    driver.execute_script("arguments[0].scrollIntoView(true);", part_button)  # Ensure visibility
-    time.sleep(1)  # Wait for stability
-    driver.execute_script("arguments[0].click();", part_button)  # Force click
-    print("✅ Clicked on '21-0130-667' button")
+    except Exception as e:
+        print("❌ Error occurred while clicking 'Show More' buttons:", e)
 
-except Exception as e:
-    print("❌ Error occurred:", e)
-
- 
+finally:
+    # 6️⃣ Close the Browser
+    time.sleep(3)  # Pause to see results before closing
+    driver.quit()
+    print("✅ Browser closed")
