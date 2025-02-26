@@ -26,7 +26,7 @@ try:
     wait.until(EC.url_to_be("https://www.qualitextrading.com/country/chile"))
     print("✅ Navigated to Chile page")
     #dominican-republic
-    wait = WebDriverWait(driver, 10)
+    wait = WebDriverWait(driver, 10)        
     australia_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//a[contains(text(), 'Dominican Republic')]")))
     australia_button.click()
     print("✅ Clicked on 'Dominican Republic' button")
